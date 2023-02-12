@@ -14,10 +14,15 @@ There are three different types of web crawlers in assignment one which are desc
 
 ## Installation
 
-For Assignment One, webcrawler1 make sure you have requests installed, you can use the following command in your cmd 
+For Assignment One;
+Make sure you have requests and beautifulsoup python libraries installed to properly run the webcrawlers. The following commands can be used in your cmd.
 
 ```bash
   $ pip install requests 
+
+```
+```bash
+  $ pip install beautifulsoup4
 
 ```
     
