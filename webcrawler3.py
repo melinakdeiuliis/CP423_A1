@@ -37,20 +37,20 @@ def webcrawler3(initialURL):
             matrix[i][j]=b+(j-i+1-2*b)
 
     # Display plot as 2D heat map
-    #plt.imshow(matrix,cmap="autumn",interpolation='nearest')
-    #plt.show()
+    plt.imshow(matrix,cmap="autumn",interpolation='nearest')
+    plt.show()
 
     # Display plot as 3D heat map
-    G=plt.figure()
-    x = [i for i in range(len(matrix)) for j in range(len(matrix[0]))]
-    y = [j for i in range(len(matrix)) for j in range(len(matrix[0]))]
-    z = [matrix[i][j] for i in range(len(matrix)) for j in range(len(matrix[0]))]
-    axis=G.add_subplot(111,projection='3d')
-    graph=axis.scatter(x,y,z)
-    axis.set_xlabel('i')
-    axis.set_ylabel('j')
-    axis.set_zlabel('f(i,j)')
-    plt.show()
+    #G=plt.figure()
+    #x = [i for i in range(len(matrix)) for j in range(len(matrix[0]))]
+    #y = [j for i in range(len(matrix)) for j in range(len(matrix[0]))]
+    #z = [matrix[i][j] for i in range(len(matrix)) for j in range(len(matrix[0]))]
+    #axis=G.add_subplot(111,projection='3d')
+    #graph=axis.scatter(x,y,z)
+    #axis.set_xlabel('i')
+    #axis.set_ylabel('j')
+    #axis.set_zlabel('f(i,j)')
+    #plt.show()
 
 
     # Save main content to txt
