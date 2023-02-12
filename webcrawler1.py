@@ -48,4 +48,4 @@ if __name__ == '__main__':
 
 
 #python webcrawler1.py --maxdepth=5 --rewrite=False --verbose=False https://crawler-test.com/links/relative_link/a/b
-#python webcrawler1.py --maxdepth=5 https://crawler-test.com/links/nofollowed_page 
+#python webcrawler1.py --maxdepth=5 https://crawler-test.com/links/nofollowed_page
