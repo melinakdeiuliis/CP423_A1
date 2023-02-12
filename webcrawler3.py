@@ -54,7 +54,7 @@ def webcrawler3(initialURL):
 
 
     # Save main content to txt
-    content=html_text[i:j+1]
+    content=html_text[0:n-1]
     new_filename=hash_object.hexdigest()+".txt"
     with open(new_filename,"w") as f:
         f.write(content)
