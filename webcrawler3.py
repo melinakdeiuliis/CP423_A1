@@ -63,3 +63,4 @@ if __name__ == '__main__':
     #initialURL = "https://www.vedantu.com/english/cat-essay"
     url=sys.argv[1]
     webcrawler3(url)
+    #python webcrawler3.py https://crawler-test.com/content/word_count_100_words
