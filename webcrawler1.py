@@ -38,7 +38,7 @@ def webcrawler1(url, maxdepth, rewrite, verbose):
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
-    parser.add_argument('initialURL', help='Initial URL to start crawling from')
+    parser.add_argument('initialURL')
     parser.add_argument('--maxdepth', type=int, required=True)
     parser.add_argument('--rewrite', type=bool, default=False)
     parser.add_argument('--verbose', type=bool, default=False)
