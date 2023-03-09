@@ -49,14 +49,14 @@ def webcrawler1(url, maxdepth, rewrite, verbose,depth):
         if (verbose==True):
             print('{}, {}'.format(url, depth))
 
-        
+        #depth crawl
         for l in link:
             depth=depth+1
             webcrawler1(l, maxdepth, rewrite, verbose,depth+1)
             if (depth==maxdepth):
                 break
 
-#create options 
+#Create options 
 parser = argparse.ArgumentParser()
 parser.add_argument('initialURL')
 parser.add_argument('--maxdepth', type=int, required=True)
@@ -66,5 +66,3 @@ parser.add_argument('--current_depth',type=int,default=1)
 args = parser.parse_args()
 
 webcrawler1(args.initialURL, args.maxdepth, args.rewrite, args.verbose,args.current_depth)
-
-
