@@ -15,8 +15,7 @@ There are three different types of web crawlers stored in assignment one which a
 ## Installation
 
 For Assignment One;
-Make sure you have requests and matplotlib python libraries installed to properly run the webcrawlers. The following commands can be used in your cmd.
-
+Make sure you have all python libraries installed to properly run the webcrawlers which are stated at the top of each module. The following commands can be used in your cmd for some important libraries used.
 ```bash
   $ pip install requests 
 
@@ -25,4 +24,7 @@ Make sure you have requests and matplotlib python libraries installed to properl
   $ pip3 install matplotlib
 
 ```
-    
+```bash
+  $ pip install beautifulsoup4
+
+```
