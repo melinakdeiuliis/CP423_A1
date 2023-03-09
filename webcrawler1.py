@@ -6,7 +6,6 @@ Anastasia, Melina & Ryan
 import hashlib
 import requests
 import os
-import re
 import time
 import argparse
 from bs4 import BeautifulSoup
