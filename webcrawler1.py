@@ -3,49 +3,69 @@ Text Retrieval and Search Engine - Assignment One
 WebCrawler1.py 
 Anastasia, Melina & Ryan 
 '''
+import hashlib
 import requests
 import os
-import hashlib
 import re
 import time
 import argparse
-
-def webcrawler1(url, maxdepth, rewrite, verbose):
+from bs4 import BeautifulSoup
+from urllib.parse import urljoin
+depth=1
+'''
+WebcrawlerOne
+Parameters:
+    url - string with address of website to search 
+    Maxdepth - integer extent to which it will index the sites content
+    rewrite - boolean if true will re-download and re-write url
+    verbose - boolean if true will print url and its depth on console
+Returns:
+    Creates hash.txt file that stores downloaded content from url
+    Creates crawler1.log file that includes hash, url, datetime and http response code
+    If verbose is true will return every link traversed along with its depth printed to screen
+'''
+def webcrawler1(url, maxdepth, rewrite, verbose,depth):
+    if depth>maxdepth:
+        return
     h = hashlib.sha1(url.encode()).hexdigest()
     filename = h + '.txt'
+    response = requests.get(url)
     if  os.path.isfile(filename) and not rewrite:
         return
-    try:
-        response = requests.get(url)
-
-        with open(filename, 'w') as f:
+    elif response.status_code==200: 
+        with open(filename, 'w',encoding="utf-8") as f:
             f.write(response.text)
 
-        link = re.findall(r'<a.*?href=[\'"](.*?)[\'"]', response.text)
-
+        soup=BeautifulSoup(response.text,'html.parser')
+        link=[]
+        for links in soup.find_all('a'):
+            href = links.get('href')
+            if href:
+                rel_url=urljoin(url,href)
+                link.append(rel_url)
+    
         with open('crawler1.log', 'a') as f:
             f.write('{},{},{},{}\n'.format(h, url, time.ctime(), response.status_code))
-
+        
         if (verbose==True):
-            print('{}, {}'.format(url, maxdepth))
+            print('{}, {}'.format(url, depth))
 
-        if (maxdepth > 0):
-            for l in link:
-                webcrawler1(l, maxdepth - 1, rewrite, verbose)
-    except:
-        pass
+        
+        for l in link:
+            depth=depth+1
+            webcrawler1(l, maxdepth, rewrite, verbose,depth+1)
+            if (depth==maxdepth):
+                break
+
+#create options 
+parser = argparse.ArgumentParser()
+parser.add_argument('initialURL')
+parser.add_argument('--maxdepth', type=int, required=True)
+parser.add_argument('--rewrite', type=bool, default=False)
+parser.add_argument('--verbose', type=bool, default=False)
+parser.add_argument('--current_depth',type=int,default=1)
+args = parser.parse_args()
+
+webcrawler1(args.initialURL, args.maxdepth, args.rewrite, args.verbose,args.current_depth)
 
 
-if __name__ == '__main__':
-    parser = argparse.ArgumentParser()
-    parser.add_argument('initialURL')
-    parser.add_argument('--maxdepth', type=int, required=True)
-    parser.add_argument('--rewrite', type=bool, default=False)
-    parser.add_argument('--verbose', type=bool, default=False)
-    args = parser.parse_args()
-
-    webcrawler1(args.initialURL, args.maxdepth, args.rewrite, args.verbose)
-
-
-#python webcrawler1.py --maxdepth=5 --rewrite=False --verbose=False https://crawler-test.com/links/relative_link/a/b
-#python webcrawler1.py --maxdepth=5 https://crawler-test.com/links/nofollowed_page
