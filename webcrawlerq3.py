@@ -4,9 +4,6 @@ import sys
 import re
 import matplotlib.pyplot as plt
 from bs4 import BeautifulSoup
-
-from mpl_toolkits.mplot3d import Axes3D
-import numpy as np
 def func(i, j):
     return i * j
 def webcrawler3(initialURL):
@@ -83,6 +80,6 @@ def webcrawler3(initialURL):
     with open(new_filename,"w") as f:
         f.write(content)
 
-if __name__ == '__main__':
-    url=sys.argv[1]
-    webcrawler3(url)
+
+url=sys.argv[1]
+webcrawler3(url)
