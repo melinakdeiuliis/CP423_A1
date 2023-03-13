@@ -28,3 +28,18 @@ Make sure you have all python libraries installed to properly run the webcrawler
   $ pip install beautifulsoup4
 
 ```
+For Assignment Two; 
+The most important library to have installed is nltk. Make sure you have nltk installed on your computer before running the programs as you may need to add additional code in the python module to then install more specific packages. 
+```bash
+  $ pip install nltk
+
+```
+If you are having problems running the code, please edit the python module and add a new line of code under the imports the following lines for question one;
+```bash
+  $ nltk.download('punkt')
+
+```
+```bash
+  $ nltk.download('stopwords')
+
+```
