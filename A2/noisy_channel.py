@@ -49,15 +49,14 @@ def noisy_channel(correct,proba,values):
                 else:
                     invertedindex[word]=1
                 total+=1
-#    invertedindex={"apple":10,"banana":9,"candy":8,"pineapple":7,"cake":6}
+
     word_list = values.split(',')
     if correct:
-        #call correct func
         for x in word_list:
-            print(suggest_correction(x,invertedindex))
+            print('Word: {}  Correction: {}',format(x,suggest_correction(x,invertedindex))
     if proba:
-        #call probability func
-        print("proba")
+        for x in word_list:
+            print('Word: {}  Probability(Word): {}',format(x,invertedindex[x]/total))
 
 
 parser = argparse.ArgumentParser()
@@ -67,6 +66,7 @@ parser.add_argument("--values")
 args = parser.parse_args()
 #values=args.values
 noisy_channel(args.correct,args.proba,args.values)
+
 
 
 
