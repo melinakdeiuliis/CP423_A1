@@ -53,15 +53,15 @@ def wikipedia_processing(zipf,tokens,stop,stem,inverted):
             plt.title('Zipf Diagram')
             plt.show()
     if (tokens):
-        with open('wikipedia.token', 'w','utf-8') as f:
+        with open('wikipedia.token', 'w',encoding='utf-8') as f:
             for token in tokenizer:
                 f.write(token + '\n')
     if (stop):
-        with open('wikipedia.token.stop', 'w','utf-8') as f:
+        with open('wikipedia.token.stop', 'w',encoding='utf-8') as f:
             for token in no_stop_words:
                 f.write(token+'\n')
     if (stem):
-        with open('wikipedia.token.stemm', 'w','utf-8') as f:
+        with open('wikipedia.token.stemm', 'w',encoding='utf-8') as f:
             for token in stemmed_tokens:
                 f.write(token+'\n')
                 
