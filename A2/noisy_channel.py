@@ -20,12 +20,6 @@ def edit_distance(s1, s2):
                 matrix[i][j] = 1 + min(matrix[i][j-1], matrix[i-1][j], matrix[i-1][j-1])
     return matrix[m][n]
 def suggest_correction(word, tokens):
-    # If word is in dictionary, return it as the best correction
-    #if word in data:
-    #    return word
-    
-    # Otherwise, calculate the edit distance between word and each token
-    # and return the token with the smallest edit distance as the best correction
     best_word = None
     best_distance = float('inf')
     for token in tokens:
@@ -49,25 +43,24 @@ def noisy_channel(correct,proba,values):
                 else:
                     invertedindex[word]=1
                 total+=1
-
     word_list = values.split(',')
     if correct:
+        #call correct func
         for x in word_list:
-            print('Word: {}  Correction: {}',format(x,suggest_correction(x,invertedindex))
+            print('Word: {}  Correction: {}'.format(x,suggest_correction(x,invertedindex)))
     if proba:
-        for x in word_list:
-            print('Word: {}  Probability(Word): {}',format(x,invertedindex[x]/total))
-
-
+        #call probability func
+        for x in word_list: 
+            if (x in invertedindex):
+                print('Word: {}  Probability(Word): {}'.format(x,invertedindex[x]/total))
+            else:
+                new_word=suggest_correction(x,invertedindex)
+                print("Word: {} CorrectedWord: {} Probability(Word): {}".format(x,new_word,invertedindex[new_word]/total))
+            
 parser = argparse.ArgumentParser()
 parser.add_argument('--correct',type=bool)
 parser.add_argument("--proba",type=bool)
 parser.add_argument("--values")
 args = parser.parse_args()
-#values=args.values
 noisy_channel(args.correct,args.proba,args.values)
 
-
-
-
-#python noisy_channel.py --correct True --values candy,apple
