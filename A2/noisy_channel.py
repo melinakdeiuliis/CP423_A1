@@ -1,10 +1,7 @@
 import argparse
 import json
-import matplotlib.pyplot as plt
 import nltk
 from nltk.corpus import stopwords
-from nltk.stem import PorterStemmer
-import numpy as np
 stop_words = set(stopwords.words('english'))
 
 def noisy_channel(correct,proba):
