@@ -13,11 +13,13 @@ def noisy_channel(correct,proba):
 
     f.close()
     #Create tokens word for word
-    tokenize=[]
+    invertedindex={}
     for entry in data:
         for word in (nltk.word_tokenize(entry["text"])):
-            if word.lower() not in stop_words:
-                tokenize.append(word)
+            if word in invertedindex:
+                invertedindex[word]+=1
+            else:
+                invertedindex[word]=1
 
 
 
