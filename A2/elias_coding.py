@@ -24,6 +24,9 @@ def gamma_encode(num):
     """
     if (num == 0):
         return '0'
+    
+    elif (num == 1):
+        return '1'
 
     l = int(log2(num))
 
@@ -44,7 +47,10 @@ def gamma_decode(num):
     # Count number of leading zeroes in num
     while True:
         if not num[N] == '0':
-            break
+            if num[N] == '1':
+                break
+            else:
+                return 'ERROR'
 
         N += 1
 
@@ -72,6 +78,9 @@ def delta_encode(num):
 
     if (num == 0):
         return "0"
+    
+    elif (num == 1):
+        return "1"
 
     gamma = gamma_encode(1 + math.floor(log2(num)))
 
@@ -87,8 +96,13 @@ def delta_decode(num):
 
     # Count number of leading zeroes in num
     while True:
-        if not num[N] == '0':
-            break
+        if len(num) > 1 and num[0] == '1': return 'Error'
+        elif not num[N] == '0':
+            if num[N] == '1':
+                break
+            else:
+                return 'ERROR'
+        
 
         N += 1
 
@@ -109,42 +123,29 @@ def delta_decode(num):
 
     return int(decode)
 
-print(delta_decode('00100010'))
+parser = argparse.ArgumentParser()
+parser.add_argument('--alg', type = str, choices = ['gamma', 'delta'], required = True, help = 'Choose the algorithm (gamma or delta)')
 
+options = parser.add_mutually_exclusive_group(required = True)
+options.add_argument('--decode', type = str, nargs = '+', help = 'Decode a sequence of codes')
+options.add_argument('--encode', type = int, nargs = '+', help = 'Encode an array of integers')
 
-    
+args = parser.parse_args()
 
-    
+if args.decode is not None:
+    code_values = args.decode
+    if args.alg == 'gamma':
+        for x in code_values:
+            print(gamma_decode(x))
+    else:
+        for x in code_values:
+            print(delta_decode(x))
 
-    
-
-    
-
-    
-    
-
-    
-
-    
-
-
-
-
-
-
-
-
-
-
-
-    
-
-# if __name__ == '__main__':
-#     parser = argparse.ArgumentParser()
-#     parser.add_argument("--alg", required=True, choices = ["gamma", "delta"])
-
-#     group = parser.add_mutally_exclusive_group(required = True)
-
-#     group.add_argument("--encode", )
-
-#     args = parser.parse_args()  
+if args.encode is not None:
+    int_values = args.encode
+    if args.alg == 'gamma':
+        for x in int_values:
+            print(gamma_encode(x))
+    else:
+        for x in int_values:
+            print(delta_encode(x))
