@@ -1,24 +1,17 @@
-from urllib.request import urlopen
-
+import argparse
 from bs4 import BeautifulSoup
+import gzip 
+def summation(node,pageranks,nodes):
+    x=10 
+    return
+def page_rank(max,lambda,thr,nodes):
+    with gzip.open('web-Stanford.txt.gz', 'rb') as f:
+        file_content = f.read()
+    file_content = f.read().decode('utf-8')
+    pagerank=(lambda/len(nodes))+(1-lambda)
 
-import sys 
-
-import requests
-
-# --maxiteration: the maximum number of iterations to stop if algorithm has not converged 
-# -- lamda: the λ paramter value 
-# -- thr: the threshold value
-# -- nodes: the NodeIDs that we want to get their PageRank values at the end of iterations 
-
-html =urlopen('https://snap.stanford.edu/data/web-Stanford.html')
-
-max_iteration = sys.argv[1]
-
-lamda = sys.argv[2]
-
-thr = sys.argv[3]
-
-node = sys.argv[4]
- 
-
+parser = argparse.ArgumentParser()
+parser.add_argument("--maxiteration",type=int)
+parser.add_argument("--lambda",type=float)
+parser.add_argument("--thr",type=float)
+parser.add_argument("--nodes")
