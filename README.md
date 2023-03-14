@@ -42,6 +42,6 @@ If you are having problems running the code, please edit the python module and a
 
 ```
 For question three make sure you have scipy installed on your computer.
-'''bash
- $ pip install scipy
- '''
+```bash
+  $ pip install scipy
+```
