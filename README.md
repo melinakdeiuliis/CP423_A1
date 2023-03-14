@@ -41,3 +41,7 @@ If you are having problems running the code, please edit the python module and a
   $ nltk.download('stopwords')
 
 ```
+For question three make sure you have scipy installed on your computer.
+'''bash
+ $ pip install scipy
+ '''
