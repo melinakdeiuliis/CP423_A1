@@ -4,35 +4,49 @@ import json
 import numpy as np
 import string
 import os
+import nltk
+import pandas as pd
+from sklearn.feature_extraction.text import CountVectorizer
 
+# Classifier libraries
+from sklearn.model_selection import train_test_split
+from sklearn.naive_bayes import MultinomialNB
+from sklearn.neighbors import KNeighborsClassifier
+from sklearn.svm import SVC
+from sklearn.tree import DecisionTreeClassifier
+from sklearn.model_selection import cross_validate
+from sklearn.preprocessing import LabelEncoder
+from nltk.stem import WordNetLemmatizer
+
+# Tokenize and stopwords libraries
 from nltk.tokenize import word_tokenize
 from nltk.corpus import stopwords
 stop_words = set(stopwords.words('English'))
 
-# Import dataset
-fileName = 'imdb_labelled.txt'
+# Dataset file names
+filepath_dict = {'imdb': 'imdb_labelled.txt',
+                'yelp': 'yelp_labelled.txt',
+                'amazon': 'amazon_cells_labbeled'}
 
-with open(fileName, 'r') as file:
-    # Class counts
-    yesCount = 0
-    noCount = 0
+# Testing dataset
+fileName = filepath_dict['imdb']
 
-    for line in file:
-        # Tokenize line
-        tokens = word_tokenize(line)
+# Data from file
+data_list = []
 
-        print(tokens)
+# Dataset seperated by 'text' and 'sentiment'
+dataset = pd.read_csv(fileName, names = ['text', 'sentiment'], sep = '\t')
 
-        clean_tokens = []
-        # Remove stopwords and puncuation
-        for token in tokens:
-            if token.lower() not in stop_words and token not in string.punctuation:
-                clean_tokens.append(token.lower)
+# Tokenize and remove stop words and punctuation
+def clean_data(text):
+    tokens = word_tokenize(text)
+    clean_tokens = [token.lower() for token in tokens if token.lower() not in stop_words and token.lower() not in string.punctuation]
+    return clean_tokens
 
-            
-        if clean_tokens[-1] == '1':
-            yesCount += 1
-        else:
-            noCount += 1
+# Replace original text with clean_data
+dataset['text'] = dataset['text'].apply(clean_data)
 
-        print(clean_tokens)
+data_list.append(dataset)
+dataset = pd.concat(data_list)
+
+print(dataset)
