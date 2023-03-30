@@ -19,9 +19,10 @@ from sklearn.tree import DecisionTreeClassifier
 from sklearn.model_selection import cross_validate
 from sklearn.preprocessing import LabelEncoder
 from nltk.stem import WordNetLemmatizer
-from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score
 
-
+# Performance of model and confusion matrix libraries
+from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score, confusion_matrix, ConfusionMatrixDisplay
+import matplotlib.pyplot as plt
 
 # Tokenize and stopwords libraries
 from nltk.tokenize import word_tokenize
@@ -55,6 +56,14 @@ dataset['text'] = dataset['text'].apply(clean_data)
 data_list.append(dataset)
 dataset = pd.concat(data_list)
 
+#print(dataset)
+
+# for entry in dataset['text']:
+#     vectorizer = CountVectorizer(min_df=0, lowercase=True)
+#     vectorizer.fit(entry)
+#     print(vectorizer.vocabulary_)
+
+
 records = dataset['text'].values
 # x = dataset['text'].values
 y = dataset['sentiment'].values
@@ -76,18 +85,26 @@ corpus = vectorize.fit_transform(x)
 
 #print(corpus)
 
+# vectorizer = CountVectorizer(vocabulary=corpus)
+
+#print(x)
+
+# Prints the index of each unique word in corpus
+#print("Vocabulary: ", vectorizer.vocabulary_)
+
+#print(x.toarray())
+
+#print(x)
+
 x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.25, random_state=50)
 
-# Prints unique words with index values
-#vectorizer.vocabulary_
-
 vectorizer = CountVectorizer()
+#vectorizer.vocabulary_
 
 vectorizer.fit(x_train)
 X_training = vectorizer.transform(x_train)
 X_testing = vectorizer.transform(x_test)
 
-# Classifier for 
 classifier = MultinomialNB()
 classifier.fit(X_training, y_train)
 
@@ -103,3 +120,8 @@ print("Accuracy:", accuracy)
 print("Precision:", precision)
 print("Recall:", recall)
 print("F1-score:", f1)
+
+matrix = confusion_matrix(y_test, y_pred)
+display = ConfusionMatrixDisplay(confusion_matrix = matrix)
+display.plot()
+plt.show()
