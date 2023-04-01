@@ -64,6 +64,11 @@ def textSentimentAxes(file):
 
     return x, y
 
+def display_Confusion_Matrix(matrix):
+    display = ConfusionMatrixDisplay(confusion_matrix = matrix)
+    display.plot()
+    plt.show()
+
 def classifier_Training(classifier, x, y):
 
     x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.25)
@@ -98,22 +103,47 @@ def classifier_Training(classifier, x, y):
     y_pred = classifier.predict(X_testing)
 
     accuracy_test = accuracy_score(y_test, y_pred)
-    recall_test = recall_score(y_test, y_pred, average='macro')
-    precision_test = precision_score(y_test, y_pred, average='macro')
-    f1_test = f1_score(y_test, y_pred, average='macro')
+    recall_test = recall_score(y_test, y_pred, average='weighted')
+    precision_test = precision_score(y_test, y_pred, average='weighted')
+    f1_test = f1_score(y_test, y_pred, average='weighted')
     cm = confusion_matrix(y_test, y_pred)
 
-    print("Cross-validation results:")
-    print("Accuracy:", accuracy)
-    print("Recall:", recall)
-    print("Precision:", precision)
-    print("F1-score:", f1)
-    print("/nTest results:")
-    print("Accuracy:", accuracy_test)
-    print("Recall:", recall_test)
-    print("Precision:", precision_test)
-    print("F1-score:", f1_test)
-    print("Confusion matrix:\n", cm)
+    data = {
+        "Cross-validation results": {
+            "Accuracy": accuracy,
+            "Recall": recall,
+            "Precision": precision,
+            "F1-score": f1
+        },
+        "Test results": {
+            "Accuracy": accuracy_test,
+            "Recall": recall_test,
+            "Precision": precision_test,
+            "F1-score": f1_test
+        }
+    }
+
+    return data, cm
+
+def evaluation_Results(data, cm):
+
+    col_width = 18
+
+    for title, values, in data.items():
+        print(f"{title.upper():^{col_width * 2}}")
+        print("-" * col_width * 2)
+        
+        # Print the section content
+        if isinstance(values, dict):
+            for k, v in values.items():
+                print(f"{k:<{col_width}}{v:>{col_width}}")
+        elif isinstance(values, list):
+            for row in values:
+                print("".join([f"{str(item):<{col_width}}" for item in row]))
+        print()
+
+    display_Confusion_Matrix(cm)
+
 
 if __name__ == '__main__':
     # Terminal call
@@ -134,6 +164,8 @@ if __name__ == '__main__':
 
     args = parser.parse_args()
 
+    print()
+
     if args.imdb:
         datasetName = '--imdb'
     elif args.yelp:
@@ -152,4 +184,7 @@ if __name__ == '__main__':
     elif args.decisiontree:
         classifier = DecisionTreeClassifier()
 
-    classifier_Training(classifier, x, y)
+    data, cm = classifier_Training(classifier, x, y)
+
+    evaluation_Results(data, cm)
+
