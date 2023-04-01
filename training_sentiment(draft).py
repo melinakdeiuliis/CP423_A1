@@ -21,8 +21,9 @@ from nltk.stem import WordNetLemmatizer
 # Performance of model and confusion matrix libraries
 from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.feature_extraction.text import TfidfVectorizer
-from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score, confusion_matrix, ConfusionMatrixDisplay
+from sklearn.metrics import make_scorer, accuracy_score, precision_score, recall_score, f1_score, confusion_matrix, ConfusionMatrixDisplay
 import matplotlib.pyplot as plt
+import seaborn as sns
 
 # Tokenize and stopwords libraries
 from nltk.tokenize import word_tokenize
@@ -119,14 +120,21 @@ def knn_Classifier(x, y, k):
     knn.fit(X_training, y_train)
     y_pred = knn.predict(X_testing)
 
-    scoring = ['accuracy', 'recall_macro', 'precision_macro', 'f1_macro']
+    x = vectorizer.fit_transform(x)
 
+    scoring = {
+    'accuracy': make_scorer(accuracy_score),
+    'precision': make_scorer(precision_score, average='weighted'),
+    'recall': make_scorer(recall_score, average='weighted'),
+    'f1_score': make_scorer(f1_score, average='weighted')
+}
+    
     evaluation = cross_validate(knn, x, y, scoring=scoring)
 
     accuracy = evaluation['test_accuracy'].mean()
-    recall = evaluation['test_recall_macro'].mean()
-    precision = evaluation['test_precision_macro'].mean()
-    f1 = evaluation['test_f1_macro'].mean()
+    recall = evaluation['test_recall'].mean()
+    precision = evaluation['test_precision'].mean()
+    f1 = evaluation['test_f1_score'].mean()
 
     knn.fit(X_training, y_train)
 
@@ -149,17 +157,6 @@ def knn_Classifier(x, y, k):
     print("Precision:", precision_test)
     print("F1-score:", f1_test)
     print("Confusion matrix:\n", cm)
-
-
-'''
-# Using cross validation to get K-Nearest Neighbors
-k_values = [i for i in range(1, k)]
-scores = []
-
-for k in k_values:
-    knn = KNeigborsClassifier(n_neigbbors=k)
-    score = 
-'''
 
 if __name__ == '__main__':
     # Terminal call
@@ -198,24 +195,3 @@ if __name__ == '__main__':
         classifier = SVC()
     elif args.decisiontree:
         classifier = DecisionTreeClassifier()
-
-
-    '''
-    vectorizer = CountVectorizer()
-    vectorizer.fit(x_train)
-    
-    X_training = vectorizer.transform(x_train)
-    X_testing = vectorizer.transform(x_test)
-
-    classifier = MultinomialNB()
-    classifier.fit(X_training, y_train)
-
-    # Evaluate the classifier's performance on the testing set
-    y_pred = classifier.predict(X_testing)
-    accuracy = accuracy_score(y_test, y_pred)
-    precision = precision_score(y_test, y_pred, average='weighted')
-    recall = recall_score(y_test, y_pred, average='weighted')
-    f1 = f1_score(y_test, y_pred, average='weighted')
-    '''
-
-
