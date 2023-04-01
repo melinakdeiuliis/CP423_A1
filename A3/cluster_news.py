@@ -54,21 +54,21 @@ def create_word_frequency_vectors(docs):
     return vectors, unique_words
 
 
-tar=tarfile.open("20_newsgroups.tar",'r')
-tar.extractall("C:\Users\anast\Desktop\PROGRAMMING\CP423\A3\DataSet")
+tar = tarfile.open("20_newsgroups.tar.gz", "r:gz")
+
+documents = []
+x=0
+for member in tar.getmembers():
+    if member.isfile():
+        f = tar.extractfile(member)
+        content = f.read()#.decode("utf-16le")
+        documents.append(content)
+        x+=1
+        
+print(x)
 tar.close()
 
-# Find all the links on the page and extract the text of each linked document
-for link in soup.find_all('a'):
-    href = link.get('href')
-    if href.endswith('.data') or href.endswith('.txt') or href.endswith('.csv'):
-        doc_url = url + href
-        doc_response = urllib.request.urlopen(doc_url)
-        doc_content = doc_response.read()
-        doc_string = doc_content.decode('utf-8', 'ignore')
-        docs.append(doc_string)
-
-vectors, unique_words = create_word_frequency_vectors(docs)
+vectors, unique_words = create_word_frequency_vectors(documents)
 print('Unique words:', unique_words)
 print('Word frequency vectors:')
 for vector in vectors:
