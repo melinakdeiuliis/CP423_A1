@@ -7,6 +7,7 @@ import os
 import nltk
 import pandas as pd
 from string import punctuation
+import pickle
 
 # Classifier libraries
 from sklearn.model_selection import train_test_split
@@ -15,15 +16,11 @@ from sklearn.neighbors import KNeighborsClassifier
 from sklearn.svm import SVC
 from sklearn.tree import DecisionTreeClassifier
 from sklearn.model_selection import cross_validate
-from sklearn.preprocessing import LabelEncoder
-from nltk.stem import WordNetLemmatizer
 
 # Performance of model and confusion matrix libraries
 from sklearn.feature_extraction.text import CountVectorizer
-from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics import make_scorer, accuracy_score, precision_score, recall_score, f1_score, confusion_matrix, ConfusionMatrixDisplay
 import matplotlib.pyplot as plt
-import seaborn as sns
 
 # Tokenize and stopwords libraries
 from nltk.tokenize import word_tokenize
@@ -71,7 +68,7 @@ def display_Confusion_Matrix(matrix):
 
 def classifier_Training(classifier, x, y):
 
-    x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.25)
+    x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.5)
 
     vectorizer = CountVectorizer()
     vectorizer.fit(x_train)
@@ -80,6 +77,9 @@ def classifier_Training(classifier, x, y):
     X_testing = vectorizer.transform(x_test)
 
     classifier.fit(X_training, y_train)
+
+
+
     y_pred = classifier.predict(X_testing)
 
     x = vectorizer.fit_transform(x)
@@ -98,9 +98,10 @@ def classifier_Training(classifier, x, y):
     precision = evaluation['test_precision'].mean()
     f1 = evaluation['test_f1_score'].mean()
 
-    classifier.fit(X_training, y_train)
-
+    #classifier.fit(X_training, y_train)
     y_pred = classifier.predict(X_testing)
+
+    print(y_pred)
 
     accuracy_test = accuracy_score(y_test, y_pred)
     recall_test = recall_score(y_test, y_pred, average='weighted')
@@ -122,6 +123,13 @@ def classifier_Training(classifier, x, y):
             "F1-score": f1_test
         }
     }
+
+    # Save classifier model for predict_sentiment.py
+    with open('classifier.pkl', 'wb') as model:
+        pickle.dump(classifier, model)
+
+    with open('vectorizer.pkl', 'wb') as vector:
+        pickle.dump(vectorizer, vector)
 
     return data, cm
 
@@ -187,3 +195,4 @@ if __name__ == '__main__':
     data, cm = classifier_Training(classifier, x, y)
 
     evaluation_Results(data, cm)
+
