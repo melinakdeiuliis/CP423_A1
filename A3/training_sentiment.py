@@ -68,6 +68,7 @@ def display_Confusion_Matrix(matrix):
 
 def classifier_Training(classifier, x, y):
 
+    # Get training and test data from 'text' and 'sentiment'
     x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.5)
 
     vectorizer = CountVectorizer()
@@ -78,8 +79,7 @@ def classifier_Training(classifier, x, y):
 
     classifier.fit(X_training, y_train)
 
-
-
+    # Predict sentiment value using trained classifier
     y_pred = classifier.predict(X_testing)
 
     x = vectorizer.fit_transform(x)
@@ -100,8 +100,6 @@ def classifier_Training(classifier, x, y):
 
     #classifier.fit(X_training, y_train)
     y_pred = classifier.predict(X_testing)
-
-    print(y_pred)
 
     accuracy_test = accuracy_score(y_test, y_pred)
     recall_test = recall_score(y_test, y_pred, average='weighted')
