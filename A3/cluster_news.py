@@ -4,6 +4,7 @@ from nltk.corpus import stopwords
 from nltk.stem import PorterStemmer
 import nltk
 import re
+import os
 import tarfile
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.cluster import KMeans,AgglomerativeClustering,DBSCAN
@@ -28,78 +29,85 @@ def preprocess_text(text):
     # Split into words
     words = nltk.word_tokenize(text)
     # Remove stop words
-    words = [word for word in words if word not in stopwords.words('english')]
+    words = [word for word in words if word not in stopwords]
     # Stem words
     stemmer = PorterStemmer()
     words = [stemmer.stem(word) for word in words]
     # Return preprocessed text
     return ' '.join(words)
 
-# Define function to count words in a document
-def count_words(text):
-    # Split into words
-    words = text.split()
-    # Count occurrences of each word
-    counts = {}
-    for word in words:
-        if word in counts:
-            counts[word] += 1
-        else:
-            counts[word] = 1
-    # Return word count dictionary
-    return counts
 
 # Define function to represent documents as word frequency vectors
 def create_word_frequency_vectors(docs):
     vectors=[]
     for doc in docs:
+        doc=preprocess_text(doc)
         vectorizer = TfidfVectorizer()
-        tfidf_vectors = vectorizer.fit_transform(doc)
-        vectors.apppend(tfidf_vectors)
+        vectorizer.fit([doc])
+        tfidf_vector = vectorizer.transform([doc])
+        vectors.append(tfidf_vector)
+        #print(tfidf_vector.toarray())
     return vectors
-
-
-
 
 def cluster_news(ncluster,kmeans,whc,ac,dbscan):
 
-    tar = tarfile.open("20_newsgroups.tar.gz", "r:gz")
+    # open and read dataset
+    # filename = "20_newsgroups.tar.gz"
+    # tar = tarfile.open("20_newsgroups.tar.gz", "r:gz")
+    # if not os.path.exists("20_newsgroups"):
+    #     with tarfile.open(filename, "r:gz") as tar:
+    #         tar.extractall()
+    # #create array of strings where each string is a document
+    # documents = []
+    # newsgroup_names = os.listdir("20_newsgroups")
+    # for newsgroup_name in newsgroup_names:
+    #     newsgroup_path = os.path.join("20_newsgroups", newsgroup_name)
+    #     if os.path.isdir(newsgroup_path):
+    #         for filename in os.listdir(newsgroup_path):
+    #             file_path = os.path.join(newsgroup_path, filename)
+    #             with open(file_path, "r", encoding="ISO-8859-1") as f:
+    #                 document = f.read()
+    #                 documents.append(document)
+    # tar.close()
+    #create vectors
 
-    documents = []
-    x=0
-    for member in tar.getmembers():
-        if member.isfile():
-            f = tar.extractfile(member)
-            content = f.read()
-            try:
-                # Try to decode the content as UTF-8
-                content = content.decode('utf-8')
-            except UnicodeDecodeError:
-                # If decoding as UTF-8 fails, try decoding as UTF-16LE
-                content = content.decode('utf-16le')
-            # Convert the decoded string to bytes using UTF-8 encoding
-            content = content.encode('utf-8')
-            documents.append(content)
-            x+=1
-            
-    print(x)
-    tar.close()
 
+    documents=["The city was the administrative centre of Chernobyl Raion (district) from 1923. After the disaster, in 1988, the raion was dissolved and administration was transferred to the neighbouring Ivankiv Raion. The raion was abolished on 18 July 2020 as part of the administrative reform of Ukraine, which reduced the number of raions of Kyiv Oblast to seven. The area of Ivankiv Raion was merged into Vyshhorod Raion."]
     vectors = create_word_frequency_vectors(documents)
+    
     arr=np.array(vectors)
-    k=ncluster
-    if (kmeans==True):
-        kmeans = KMeans(k, random_state=0).fit(arr)
-        predicted_k=kmeans.labels_
-    if (whc==True):
-        ward=AgglomerativeClustering(k,linkage='ward').fit(arr) 
-        predicted_w=ward.labels_
-    if (ac==True):
-        aggl=AgglomerativeClustering(k).fit(arr)
-        predicted_a=aggl.labels_
-    if (dbscan==True):
-        dbscan = DBSCAN(eps=0.5, min_samples=2).fit(arr)
-        predicted_db=dbscan.labels_
+    for k in ncluster:
+        if (kmeans==True):
+            kmeans = KMeans(k, random_state=0).fit(arr)
+            predicted_k=kmeans.labels_
+            print("Adjusted Mutual Information Score:") #{}".format(adjusted_mutual_info_score(true_labels, predicted_k)))
+            print("Adjusted Random Score: ")#{}".format(adjusted_rand_score(true_labels, predicted_k))
+            print("Completeness Score: ")#{}".format(completeness_score(true_labels, predicted_k))
+        if (whc==True):
+            ward=AgglomerativeClustering(k,linkage='ward').fit(arr) 
+            predicted_w=ward.labels_
+            print("Adjusted Mutual Information Score:") #{}".format(adjusted_mutual_info_score(true_labels, predicted_w)))
+            print("Adjusted Random Score: ")#{}".format(adjusted_rand_score(true_labels, predicted_w))
+            print("Completeness Score: ")#{}".format(completeness_score(true_labels, predicted_w))
+        if (ac==True):
+            aggl=AgglomerativeClustering(k).fit(arr)
+            predicted_a=aggl.labels_
+            print("Adjusted Mutual Information Score:") #{}".format(adjusted_mutual_info_score(true_labels, predicted_a)))
+            print("Adjusted Random Score: ")#{}".format(adjusted_rand_score(true_labels, predicted_a))
+            print("Completeness Score: ")#{}".format(completeness_score(true_labels, predicted_a))
+        if (dbscan==True):
+            dbscan = DBSCAN(eps=0.5, min_samples=2).fit(arr)
+            predicted_db=dbscan.labels_
+            print("Adjusted Mutual Information Score:") #{}".format(adjusted_mutual_info_score(true_labels, predicted_db)))
+            print("Adjusted Random Score: ")#{}".format(adjusted_rand_score(true_labels, predicted_db))
+            print("Completeness Score: ")#{}".format(completeness_score(true_labels, predicted_db))
+
+
+        print("Predicted kmeans labels: {}".format(predicted_k))
+        print("Predicted ward labels: {}".format(predicted_w))
+        print("Predicted agglomerative labels: {}".format(predicted_a))
+        print("Predicted dbscan labels: {}".format(predicted_db))
+
 
     #calculate ground_truth labels for each,calculate and print them 
     #ami = adjusted_mutual_info_score(true_labels, predicted_labels)
@@ -107,10 +115,14 @@ def cluster_news(ncluster,kmeans,whc,ac,dbscan):
     #completeness = completeness_score(true_labels, predicted_labels)
 
 
+
+
 parser = argparse.ArgumentParser()
-parser.add_argument('--ncluster',type=int,default=20)
+parser.add_argument('--ncluster',type=int,nargs = '+',default=[20])
 parser.add_argument('--kmeans', type=bool, default=True)
 parser.add_argument('--whc', type=bool, default=False)
 parser.add_argument('--ac', type=bool, default=False)
 parser.add_argument('--dbscan',type=bool,default=False)
 args = parser.parse_args()
+
+cluster_news(args.ncluster,args.kmeans,args.whc,args.ac,args.dbscan)
