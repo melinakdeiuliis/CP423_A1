@@ -3,7 +3,21 @@ Search Engine Project
 CP423 - April 2023
 Anastasia, Melina and Ryan
 """
+import soundex
 
+class InvertedIndex:
+    def __init__(self):
+        self.index = {}
+        
+    def add_document(self, doc_hash, text):
+        for word in text.split():
+            soundex_code = soundex.soundex(word)
+            if soundex_code not in self.index:
+                self.index[soundex_code] = {}
+            if doc_hash not in self.index[soundex_code]:
+                self.index[soundex_code][doc_hash] = 0
+            self.index[soundex_code][doc_hash] += 1
+            
 def printoptions():
     print("""Select an option:
 1- Collect new documents.
