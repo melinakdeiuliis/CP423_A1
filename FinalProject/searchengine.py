@@ -36,14 +36,19 @@ def searchengine():
     opt=int(opt)
     
     while (opt!=7):
-        """Collect new documents
-    read sources.txt and create hash.txt for each site"""
         if (opt==1):
-            print("reading source.txt")
-
-
-
-
+            print("reading source.txt and populating data folder")
+            with open("sources.txt", 'r') as f:
+                for line in f:
+                    topic,url=line.strip().split(",")
+                    topic_folder = os.path.join("Data", topic)
+                    response=requests.get(url)
+                    content=response.text
+                    h = hashlib.sha1(url.encode()).hexdigest()
+                    filename = h + '.txt'
+                    fn=os.path.join(topic_folder,filename)
+                    with open(fn,'w',encoding='utf-8') as output:
+                        output.write(content)
 
         """
         Index documents
